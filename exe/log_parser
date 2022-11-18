@@ -1,2 +1,19 @@
 #!/usr/bin/env ruby
+require "bundler/setup"
 require "log_parser"
+
+def request_arguments
+  STDERR.puts "Please prowide a file path, ex. #{File.basename($0)} /some/file.log"
+
+  exit 1
+end
+
+file_path = ARGV[0] or request_arguments
+begin
+  parser = LogParser::Parser.new(file_path)
+  puts parser.format
+rescue LogParser::Error => e
+  STDERR.puts "Could not parse file: #{e.message}"
+
+  exit 2
+end
